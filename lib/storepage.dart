@@ -19,7 +19,6 @@ class _StorePageState extends State<StorePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
     var scaffold = Scaffold(
       appBar: AppBar(
         title: const Text('back home'),
@@ -54,9 +53,10 @@ class _StorePageState extends State<StorePage> {
                                 )
                             ),
                             const SizedBox(height: 10.0),
-                            Expanded(
+                            SizedBox(
+                              height: 230,
                               child: FutureBuilder<List<Plant>>(
-                                future: widget.dbManager.getAllPlants(widget.db),
+                                future: widget.dbManager.getLastPlants(widget.db),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? ListView.builder(
@@ -64,8 +64,7 @@ class _StorePageState extends State<StorePage> {
                                           itemCount: snapshot.data?.length,
                                           itemBuilder: (_, int position) {
                                             final item = snapshot.data?[position];
-                                                return Container(
-                                                    height: 200.0,
+                                                return Container(                                                  
                                                     width: 200.0,
                                                     child: Card( 
                                                       child:

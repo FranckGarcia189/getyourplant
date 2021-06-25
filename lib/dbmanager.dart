@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import "package:path/path.dart";
 import 'package:sqflite/sqflite.dart';
 import 'package:getyourplant/plant.dart';
@@ -70,8 +72,7 @@ class DbManager {
   }
 
   Future<List<Plant>> getLastPlants(Database db) async {
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT TOP(5) * FROM PLANT ORDER BY plantId DESC');
+    final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT * FROM PLANT ORDER BY plantId DESC LIMIT 5');
     print("ok query last");
     // Convertir la liste de Map en liste de Plantes
     return List.generate(maps.length, (i) {
@@ -96,6 +97,20 @@ class DbManager {
     else {
       return false;
     }  
+  }
+
+  // Selectionner une plante
+  Future<Plant> getPlant(Database db, int? plantId) async {  
+    Plant plant = new Plant(plantName: "", plantOrigin: "", plantDescription: "", plantPhotoPath: "", plantPrice: 0, plantCreationDate: "");
+    List<Map<String, Object?>> plantMap = 
+      await db.rawQuery('SELECT * FROM PLANT WHERE plantId = ?', [plantId]);
+    if (plantMap.length > 0) {
+      plant = Plant.fromMap(plantMap[0]);
+      return plant;
+    }
+    else {
+      return plant;
+    } 
   }
 
   // Premières insertions pour initialiser la base
